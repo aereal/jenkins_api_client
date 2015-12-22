@@ -779,7 +779,7 @@ module JenkinsApi
 
       def get_last_successful_build_number(job_name, branch)
         @logger.info "Obtaining last successful build number of #{job_name}"
-        res = @client.api_get_request("/job/#{path_encode(job)}/lastSuccessfulBuild")
+        res = @client.api_get_request("/job/#{path_encode(job_name)}/lastSuccessfulBuild")
         actions = res['actions']
         builds_by_branch_name = actions.find {|a| a.has_key?('buildsByBranchName') } or return
         build_info = builds_by_branch_name['buildsByBranchName'][branch]
