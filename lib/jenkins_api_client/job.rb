@@ -777,6 +777,15 @@ module JenkinsApi
       end
       alias_method :build_number, :get_current_build_number
 
+      def get_last_successful_build_number(job_name, branch)
+        @logger.info "Obtaining last successful build number of #{job_name}"
+        res = @client.api_get_request("/job/#{path_encode(job)}/lastSuccessfulBuild")
+        actions = res['actions']
+        builds_by_branch_name = actions.find {|a| a.has_key?('buildsByBranchName') } or return
+        build_info = builds_by_branch_name['buildsByBranchName'][branch]
+        build_info['buildNumber']
+      end
+
       # Build a Jenkins job, optionally waiting for build to start and
       # returning the build number.
       # Adds support for new/old Jenkins servers where build_queue id may
